@@ -52,3 +52,7 @@ variable "gitHubActionsAppCIrole" {
 variable "gitHubActionsTerraformRole" {
   type = string
 }
+
+variable "my_iam" {
+  type = string
+}

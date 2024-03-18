@@ -11,3 +11,4 @@ workers_pricing_type       = "SPOT"
 instance_types             = ["t3.micro"]
 gitHubActionsAppCIrole     = "arn:aws:iam::207795769522:role/gitHubActionsAppCIrole"
 gitHubActionsTerraformRole = "arn:aws:iam::207795769522:role/gitHubActionsIAMroleDev"
+my_iam                     = "arn:aws:iam::207795769522:user/bbaizhan"
