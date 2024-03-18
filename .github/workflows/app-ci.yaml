@@ -1,0 +1,68 @@
+name: Reviews App Image CI
+
+on:
+  push:
+    branches:
+      - feature/**
+      - staging
+      - main
+
+# required permissions by GitHub Actions for assuming AWS IAM role
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+env:
+  AWS_REGION: "us-east-1"
+  ENVIRONMENT_STAGE: ${{ (github.ref == 'refs/heads/main' && 'production') || (github.ref == 'refs/heads/staging' && 'staging') || 'dev' }}
+jobs:
+  app-build-and-deploy:
+    environment: ${{ (github.ref == 'refs/heads/main' && 'production') || (github.ref == 'refs/heads/staging' && 'staging') || 'dev' }}
+    runs-on: ubuntu-latest
+    steps:
+      # checkout code
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+
+      # login to AWS
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.IAM_ROLE_TO_TO_PUSH }}
+          role-session-name: GitHubActionsCIRoleSession
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Login to ECR of the current account
+      - id: login-ecr
+        if: github.ref != 'refs/heads/main'
+        name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        if: github.ref != 'refs/heads/main'
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: time-off-management
+          IMAGE_TAG: ${{ github.sha }}
+        working-directory: /
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Login to EKS - update kubeconfig
+        run: aws eks update-kubeconfig --name project-x-eks-${ENVIRONMENT_STAGE} --region $AWS_REGION
+
+      # Backend: Deploy image to Kubernetes as a (Deployment|StatefulSet|Job|CronJob|DaemonSet) + Networking (Service(ClusterIP|LoadBalancer)|Ingress|Service Mesh)
+      # - name: Deploy to Kubernetes
+      #   env:
+      #     SEMANTIC_TAG: "v1.0.2" # Manually set
+      #   run: |
+      #     if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+      #       IMAGE_TAG=${{ env.SEMANTIC_TAG }}
+      #     else
+      #       IMAGE_TAG=${{ github.sha }}
+      #     fi
+
+      #     helm upgrade --install time-off-management-app ./app-helm-chart \
+      #       --values ./app-helm-chart/values/backend/${ENVIRONMENT_STAGE}-values.yaml \
+      #       --namespace time-off-management-app --create-namespace \
+      #       --set image.tag="$IMAGE_TAG"
