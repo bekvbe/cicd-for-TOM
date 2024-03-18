@@ -13,4 +13,5 @@ module "projectx-eks-cluster" {
   instance_types             = var.instance_types
   gitHubActionsAppCIrole     = var.gitHubActionsAppCIrole
   gitHubActionsTerraformRole = var.gitHubActionsTerraformRole
+  my_iam                     = var.my_iam
 }
