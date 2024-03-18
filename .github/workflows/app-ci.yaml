@@ -48,7 +48,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Login to EKS - update kubeconfig
-        run: aws eks update-kubeconfig --name project-x-eks-${ENVIRONMENT_STAGE} --region $AWS_REGION
+        run: aws eks update-kubeconfig --name time-off-management-eks-${ENVIRONMENT_STAGE} --region $AWS_REGION
 
       # Backend: Deploy image to Kubernetes as a (Deployment|StatefulSet|Job|CronJob|DaemonSet) + Networking (Service(ClusterIP|LoadBalancer)|Ingress|Service Mesh)
       # - name: Deploy to Kubernetes
