@@ -55,13 +55,6 @@ resource "aws_iam_role_policy_attachment" "k8sclusterrole-AmazonEKSVPCResourceCo
   role       = aws_iam_role.k8sclusterrole.name
 }
 
-# output "endpoint" {
-#   value = aws_eks_cluster.example.endpoint
-# }
-
-# output "kubeconfig-certificate-authority-data" {
-#   value = aws_eks_cluster.example.certificate_authority[0].data
-# }
 
 resource "aws_security_group" "k8scluster-sg" {
   name        = "eks-cluster-sg-${local.cluster_name}"

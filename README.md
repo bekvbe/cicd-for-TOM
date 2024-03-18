@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# cicd-for-TOM
-This is a CI/CD pipeline for an open source "Time Off Management" application
-=======
-
 # TimeOff.Management
 
 Web application for managing employee absences.
@@ -55,9 +50,9 @@ Ability to back up entire company leave data into CSV file. So it could be used 
 
 The most used customer paths are mobile friendly:
 
-* employee is able to request new leave from mobile device
+- employee is able to request new leave from mobile device
 
-* supervisor is able to record decision from the mobile as well.
+- supervisor is able to record decision from the mobile as well.
 
 **Lots of other little things that would make life easier**
 
@@ -94,6 +89,7 @@ cd timeoff-management
 npm install
 npm start
 ```
+
 Open http://localhost:3000/ in your browser.
 
 ## Run tests
@@ -131,6 +127,7 @@ npm start
 There are some customizations available.
 
 ## How to amend or extend colours available for colour picker?
+
 Follow instructions on [this page](docs/extend_colors_for_leave_type.md).
 
 ## Customization
@@ -145,9 +142,8 @@ respect the alphabet while sorting customer entered content.
 For that purpose the application config file has `locale_code_for_sorting` entry.
 By default the value is `en` (English). One can override it with other locales such as `cs`, `fr`, `de` etc.
 
-
 ## Feedback
 
 Please report any issues or feedback to <a href="https://twitter.com/FreeTimeOffApp">twitter</a> or Email: pavlo at timeoff.management
 
->>>>>>> 422b6f6 (Using node 13 with 1.3.2 tag)
+> > > > > > > 422b6f6 (Using node 13 with 1.3.2 tag)
