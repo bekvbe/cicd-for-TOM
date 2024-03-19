@@ -3,7 +3,7 @@ on:
   # trigger/start job when push happens to any of specified branches
   push:
     branches:
-      - feature/**
+      # - feature/**
       - staging
       - main
 # required permissions by GitHub Actions for assuming AWS IAM role
