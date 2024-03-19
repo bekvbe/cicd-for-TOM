@@ -1,51 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: { { .Values.appName } }
-  namespace: { { .Values.appNamespace } }
+  name: {{.Values.appName}}
+  namespace: {{.Values.appNamespace}}
   labels:
-    app: { { .Values.appName } }
+    app: {{.Values.appName}}
 spec:
-  replicas: { { .Values.replicaCount } }
+  replicas: {{.Values.replicaCount}}
   selector:
     matchLabels:
-      app: { { .Values.appName } }
+      app: {{.Values.appName}}
   template:
     metadata:
       labels:
-        app: { { .Values.appName } }
+        app: {{.Values.appName}}
     spec:
-      serviceAccountName: { { .Values.serviceAccount } }
+      serviceAccountName: {{.Values.serviceAccount}}
       containers:
-        - name: { { .Values.appName } }
+        - name: {{.Values.appName}}
           image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
           ports:
-            - containerPort: { { .Values.port } }
+            - containerPort: {{.Values.port}}
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Values.appName }}-svc"
-  namespace: { { .Values.appNamespace } }
+  namespace: {{.Values.appNamespace}}
 spec:
   selector:
-    app: { { .Values.appName } }
+    app: {{.Values.appName}}
   ports:
-    - protocol: { { .Values.serviceProtocol } }
-      port: { { .Values.servicePort } }
-      targetPort: { { .Values.port } }
+    - protocol: {{.Values.serviceProtocol}}
+      port: {{.Values.servicePort}}
+      targetPort: {{.Values.port}}
 ---
 # Ingress => Service (ClusterIP) => Pods
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ .Values.appName }}-ingress"
-  namespace: { { .Values.appNamespace } }
+  namespace: {{.Values.appNamespace}}
 spec:
+  ingressClassName: nginx
   rules:
-    - host: { { .Values.hostname } }
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -53,5 +53,4 @@ spec:
               service:
                 name: "{{ .Values.appName }}-svc"
                 port:
-                  number: { { .Values.servicePort } }
-  ingressClassName: nginx
+                  number: {{.Values.servicePort}}
