@@ -3,7 +3,7 @@ name: Reviews App Image CI
 on:
   push:
     branches:
-      # - feature/**
+      - feature/**
       - staging
       - main
 
