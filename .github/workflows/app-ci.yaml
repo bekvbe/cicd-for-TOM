@@ -1,4 +1,4 @@
-name: Reviews App Image CI
+name: CICD for Time off management app
 
 on:
   push:
