@@ -1,89 +1,57 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}
-  namespace: {{ .Values.appNamespace }}
+  name: { { .Values.appName } }
+  namespace: { { .Values.appNamespace } }
   labels:
-    app: {{ .Values.appName }}
+    app: { { .Values.appName } }
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: { { .Values.replicaCount } }
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: { { .Values.appName } }
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}
+        app: { { .Values.appName } }
     spec:
-      serviceAccountName: {{ .Values.serviceAccount }}
+      serviceAccountName: { { .Values.serviceAccount } }
       containers:
-      - name: {{ .Values.appName }}
-        image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
-        ports:
-        - containerPort: {{ .Values.port }}
-        env:
-        # loop through values and create plain ENV variables
-        {{- range .Values.appConfig.envVars }}
-        - name: {{ .name }}
-          value: {{ .value | quote }}
-        {{- end }}
+        - name: { { .Values.appName } }
+          image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: { { .Values.port } }
 
-        # loop through values and create secret-based ENV variables
-        {{- range .Values.appConfig.secrets }}
-        - name: {{ .name }}
-          valueFrom:
-            secretKeyRef:
-              name: {{ .secretName }}
-              key: {{ .key }}
-        {{- end }}
-
-        # volumes and volumeMounts section are officially required even if not mounting secrets as file,
-        # in this case using values as envs only, but still have to specify volumes and volumeMounts
-        volumeMounts:
-        {{- if .Values.awsSecrets.enabled }}
-        - name: secrets-store-inline
-          mountPath: "/mnt/secrets-store"
-          readOnly: true
-        {{- end }}
-      volumes:
-      {{- if .Values.awsSecrets.enabled }}
-      - name: secrets-store-inline
-        csi:
-          driver: secrets-store.csi.k8s.io
-          readOnly: true
-          volumeAttributes:
-            secretProviderClass: {{ .Values.awsSecrets.secretProviderClassName }}
-      {{- end }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Values.appName }}-svc"
-  namespace: {{ .Values.appNamespace }}
+  namespace: { { .Values.appNamespace } }
 spec:
   selector:
-    app: {{ .Values.appName }}
+    app: { { .Values.appName } }
   ports:
-    - protocol: {{ .Values.serviceProtocol }}
-      port: {{ .Values.servicePort }}
-      targetPort: {{ .Values.port }}
+    - protocol: { { .Values.serviceProtocol } }
+      port: { { .Values.servicePort } }
+      targetPort: { { .Values.port } }
 ---
 # Ingress => Service (ClusterIP) => Pods
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ .Values.appName }}-ingress"
-  namespace: {{ .Values.appNamespace }}
+  namespace: { { .Values.appNamespace } }
 spec:
   rules:
-  - host: {{ .Values.hostname }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: "{{ .Values.appName }}-svc"
-            port:
-              number: {{ .Values.servicePort }}
+    - host: { { .Values.hostname } }
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "{{ .Values.appName }}-svc"
+                port:
+                  number: { { .Values.servicePort } }
   ingressClassName: nginx
