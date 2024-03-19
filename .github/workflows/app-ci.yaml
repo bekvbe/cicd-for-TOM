@@ -50,18 +50,18 @@ jobs:
       - name: Login to EKS - update kubeconfig
         run: aws eks update-kubeconfig --name time-off-management-eks-${ENVIRONMENT_STAGE} --region $AWS_REGION
 
-      # Backend: Deploy image to Kubernetes as a (Deployment|StatefulSet|Job|CronJob|DaemonSet) + Networking (Service(ClusterIP|LoadBalancer)|Ingress|Service Mesh)
-      # - name: Deploy to Kubernetes
-      #   env:
-      #     SEMANTIC_TAG: "v1.0.2" # Manually set
-      #   run: |
-      #     if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-      #       IMAGE_TAG=${{ env.SEMANTIC_TAG }}
-      #     else
-      #       IMAGE_TAG=${{ github.sha }}
-      #     fi
+      # HELM: Deploy image to Kubernetes as a (Deployment|StatefulSet|Job|CronJob|DaemonSet) + Networking (Service(ClusterIP|LoadBalancer)|Ingress|Service Mesh)
+      - name: Deploy to Kubernetes
+        env:
+          SEMANTIC_TAG: "v1.0.0" # Manually set
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            IMAGE_TAG=${{ env.SEMANTIC_TAG }}
+          else
+            IMAGE_TAG=${{ github.sha }}
+          fi
 
-      #     helm upgrade --install time-off-management-app ./app-helm-chart \
-      #       --values ./app-helm-chart/values/backend/${ENVIRONMENT_STAGE}-values.yaml \
-      #       --namespace time-off-management-app --create-namespace \
-      #       --set image.tag="$IMAGE_TAG"
+          helm upgrade --install time-off-management-app ./app-helm-chart \
+            --values ./app-helm-chart/values/${ENVIRONMENT_STAGE}-values.yaml \
+            --namespace time-off-management-app --create-namespace \
+            --set image.tag="$IMAGE_TAG"

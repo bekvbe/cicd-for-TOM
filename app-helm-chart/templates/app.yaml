@@ -69,9 +69,6 @@ spec:
       targetPort: {{ .Values.port }}
 ---
 # Ingress => Service (ClusterIP) => Pods
-# if requested hostname is abcexample.com => route to Service A
-# if requested hostname is xyzexample.com => route to Service B
-{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -90,10 +87,3 @@ spec:
             port:
               number: {{ .Values.servicePort }}
   ingressClassName: nginx
-  {{- if .Values.ingress.tls.enabled }}
-  tls:
-  - hosts:
-      - {{ .Values.hostname }}
-    secretName: {{ .Values.ingress.tls.secretName }}
-  {{- end }}
-{{- end }}
