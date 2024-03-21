@@ -45,12 +45,12 @@ jobs:
 
       # Generates an execution plan for Terraform
       # - name: Terraform Plan
-        # run: terraform plan -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
+      # run: terraform plan -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
 
       # Build infrastructure according to Terraform configuration files
       # - name: Terraform Apply
-        # run: terraform apply -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
+      # run: terraform apply -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
 
       # Destroy infrastructure according to Terraform configuration files
       - name: Terraform Destroy
-      run: terraform destroy -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
+        run: terraform destroy -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
