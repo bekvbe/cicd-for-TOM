@@ -4,8 +4,8 @@ on:
   push:
     branches:
       # - feature/**
-      # - staging
-      # - main
+      - staging
+      - main
 
 # required permissions by GitHub Actions for assuming AWS IAM role
 permissions:
