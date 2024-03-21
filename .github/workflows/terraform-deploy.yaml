@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - feature/**
-      # - staging
-      # - main
+      - staging
+      - main
 # required permissions by GitHub Actions for assuming AWS IAM role
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -47,10 +47,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
 
-      # # # Build infrastructure according to Terraform configuration files
-      # - name: Terraform Apply
-        # run: terraform apply -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
+      # # Build infrastructure according to Terraform configuration files
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
 
       # Destroy infrastructure according to Terraform configuration files
-      - name: Terraform Destroy
-      run: terraform destroy -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
+      # - name: Terraform Destroy
+      # run: terraform destroy -auto-approve -input=false -var-file=time-off-management-${ENVIRONMENT_STAGE}.tfvars
