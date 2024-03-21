@@ -1,7 +1,6 @@
 replicaCount: 1
 image:
   repo: "207795769522.dkr.ecr.us-east-1.amazonaws.com/time-off-management"
-  tag: "795749fff7587226f2a93821a7f0ba98ac992214"
 port: 3000
 servicePort: 80
 serviceProtocol: TCP
